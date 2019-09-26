@@ -2,11 +2,20 @@
   <div>
     <p>
       <img class="logo" src="../images/logo.jpg" alt="ロゴ">
-      <span class="sample">サンプルコード</span>
     </p>
-    <MyComponent :message="$data.message" />
+    <template v-for="(message, index) in $data.messages">
+      <ChatMessage
+        :key="index"
+        :message="message"
+      />
+    </template>
     <form @submit="onSubmit">
-      <input v-model="$data.text" type="text">
+      <div>
+        <input v-model="$data.name" type="text">
+      </div>
+      <div>
+        <textarea v-model="$data.text" type="text"></textarea>
+      </div>
       <button type="submit">送信</button>
     </form>
   </div>
@@ -16,15 +25,16 @@
 import socket from './utils/socket';
 
 // components
-import MyComponent from './components/MyComponent.vue';
+import ChatMessage from './components/ChatMessage.vue';
 
 export default {
   components: {
-    MyComponent
+    ChatMessage
   },
   data() {
     return {
-      message: '',
+      messages: [],
+      name: '',
       text: ''
     };
   },
@@ -35,7 +45,7 @@ export default {
 
     socket.on('send', (message) => {
       console.log(message);
-      this.$data.message = message;
+      this.$data.messages.push(message);
     });
   },
   methods: {
@@ -44,7 +54,15 @@ export default {
      */
     onSubmit(e) {
       e.preventDefault();
-      socket.emit('send', this.$data.text);
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = ('0' + now.getMinutes()).slice(-2);
+      const message = {
+        name: this.$data.name,
+        text: this.$data.text,
+        time: hours + ':' + minutes
+      };
+      socket.emit('send', message);
     }
   }
 };

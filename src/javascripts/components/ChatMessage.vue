@@ -7,7 +7,11 @@ import VueTypes from 'vue-types';
 
 export default {
   props: {
-    message: VueTypes.string.isRequired
+    message: VueTypes.shape({
+      name: VueTypes.string.isRequired,
+      text: VueTypes.string.isRequired,
+      time: VueTypes.string.isRequired
+    })
   }
 };
 </script>
