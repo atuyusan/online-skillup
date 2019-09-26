@@ -1,20 +1,22 @@
 <template>
-  <div>
+  <div class="container">
     <p>
       <img class="logo" src="../images/logo.jpg" alt="ロゴ">
     </p>
-    <template v-for="(message, index) in $data.messages">
-      <ChatMessage
-        :key="index"
-        :message="message"
-      />
-    </template>
-    <form @submit="onSubmit">
+    <div class="main">
+      <template v-for="(message, index) in $data.messages">
+        <ChatMessage
+          :key="index"
+          :message="message"
+        />
+      </template>
+    </div>
+    <form @submit="onSubmit" class="chat-form">
       <div>
-        <input v-model="$data.name" type="text">
+        <input v-model="$data.name" type="text" class="chat-form-name" placeholder="名前">
       </div>
       <div>
-        <textarea v-model="$data.text" type="text"></textarea>
+        <textarea v-model="$data.text" type="text" class="chat-form-text" placeholder="メッセージ"></textarea>
       </div>
       <button type="submit">送信</button>
     </form>
@@ -62,18 +64,72 @@ export default {
         text: this.$data.text,
         time: hours + ':' + minutes
       };
+      // 入力欄をリセット
+      this.$data.name = '';
+      this.$data.text = '';
       socket.emit('send', message);
     }
+  },
+  mounted: {
+
   }
 };
 </script>
 
 <style lang="scss" scoped>
+$btn-width: 70px;
+$btn-height: 40px;
+$radius: 3px;
+$gap: 10px;
+
 .logo {
   width: 40px;
 }
 
-.sample {
-  color: $red;
+.container, .chat-form {
+  width: calc(100% - 50px);
+  max-width: 800px;
+}
+
+.container {
+  margin: 0 auto;
+}
+
+.main {
+  // 吹き出しと入力フォームが重ならないようにする
+  padding-bottom: 150px;
+}
+
+.chat-form {
+  padding: $gap 0;
+  position: fixed;
+  bottom: 0;
+  display: block;
+  background-color: white;
+
+  &-name, &-text {
+    display: inline-block;
+    border-radius: $radius;
+    outline: none;
+  }
+
+  &-name {
+    margin-bottom: $gap;
+  }
+
+  &-text {
+    width: calc(100% - #{$btn-width} - #{$gap});
+    height: $btn-height;
+    float: left;
+  }
+
+  button {
+    display: inline-block;
+    width: $btn-width;
+    height: $btn-height;
+    float: right;
+    border-radius: $radius;
+    outline: none;
+  }
 }
 </style>
