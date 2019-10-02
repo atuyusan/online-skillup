@@ -45,9 +45,16 @@ io.on('connection', (socket) => {
     console.log('disconnected:', socket.id);
   });
 
-  // ユーザの参加
-  socket.on('send', (message) => {
-    console.log('send:', message);
-    io.emit('send', message);
+  // 自分以外のユーザにメッセージを送信
+  socket.on('send_to_others', (message) => {
+    console.log('send_to_others:', message);
+    // io.emit('send', message);
+    socket.broadcast.emit('send_to_others', message);
+  });
+
+  // 自分自身にメッセージを送信
+  socket.on('send_to_myself', (message) => {
+    console.log('send_to_myself:', message);
+    io.to(socket.id).emit('send_to_myself', message);
   });
 });

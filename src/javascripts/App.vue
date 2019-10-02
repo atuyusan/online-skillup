@@ -45,8 +45,11 @@ export default {
       console.log('connected!');
     });
 
-    socket.on('send', (message) => {
-      console.log(message);
+    socket.on('send_to_others', (message) => {
+      this.$data.messages.push(message);
+    });
+
+    socket.on('send_to_myself', (message) => {
       this.$data.messages.push(message);
     });
   },
@@ -67,7 +70,8 @@ export default {
       // 入力欄をリセット
       this.$data.name = '';
       this.$data.text = '';
-      socket.emit('send', message);
+      socket.emit('send_to_others', message);
+      socket.emit('send_to_myself', message);
     }
   },
   mounted: {
