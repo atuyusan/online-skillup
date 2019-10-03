@@ -12,9 +12,9 @@
       </template>
     </div>
     <form @submit="onSubmit" class="chat-form">
-      <div>
+      <!-- <div>
         <input v-model="$data.name" type="text" class="chat-form-name" placeholder="名前">
-      </div>
+      </div> -->
       <div>
         <textarea v-model="$data.text" type="text" class="chat-form-text" placeholder="メッセージ"></textarea>
       </div>
@@ -52,6 +52,18 @@ export default {
     socket.on('send_to_myself', (message) => {
       this.$data.messages.push(message);
     });
+
+    // チャットルームに参加
+    const name = prompt('ユーザ名を入力してください：');
+    if (name) {
+      this.$data.name = name;
+    } else {
+      this.$data.name = 'anonymous';
+    }
+    socket.emit('join', {
+      room: 'room1',
+      name: name
+    });
   },
   methods: {
     /**
@@ -64,13 +76,13 @@ export default {
       const minutes = ('0' + now.getMinutes()).slice(-2);
 
       socket.emit('send_to_others', {
-        isMyself: false,
+        type: 'others',
         name: this.$data.name,
         text: this.$data.text,
         time: hours + ':' + minutes
       });
       socket.emit('send_to_myself', {
-        isMyself: true,
+        type: 'me',
         name: this.$data.name,
         text: this.$data.text,
         time: hours + ':' + minutes

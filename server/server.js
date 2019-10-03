@@ -40,6 +40,15 @@ const io = require('socket.io')(server, { origins: '*:*' });
 io.on('connection', (socket) => {
   console.log('connected:', socket.id);
 
+  let room = '';
+
+  // ルームに参加
+  socket.on('join', (data) => {
+    console.log('join:', data);
+    room = data.room;
+    socket.join(room);
+  });
+
   // 切断時
   socket.on('disconnect', () => {
     console.log('disconnected:', socket.id);
@@ -47,14 +56,13 @@ io.on('connection', (socket) => {
 
   // 自分以外のユーザにメッセージを送信
   socket.on('send_to_others', (message) => {
-    console.log('send_to_others:', message);
-    // io.emit('send', message);
-    socket.broadcast.emit('send_to_others', message);
+    console.log('send:', message);
+    socket.broadcast.to(room).emit('send_to_others', message);
   });
 
   // 自分自身にメッセージを送信
   socket.on('send_to_myself', (message) => {
-    console.log('send_to_myself:', message);
+    console.log('send:', message);
     io.to(socket.id).emit('send_to_myself', message);
   });
 });
