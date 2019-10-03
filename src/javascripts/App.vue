@@ -62,16 +62,22 @@ export default {
       const now = new Date();
       const hours = now.getHours();
       const minutes = ('0' + now.getMinutes()).slice(-2);
-      const message = {
+
+      socket.emit('send_to_others', {
+        isMyself: false,
         name: this.$data.name,
         text: this.$data.text,
         time: hours + ':' + minutes
-      };
+      });
+      socket.emit('send_to_myself', {
+        isMyself: true,
+        name: this.$data.name,
+        text: this.$data.text,
+        time: hours + ':' + minutes
+      });
       // 入力欄をリセット
       this.$data.name = '';
       this.$data.text = '';
-      socket.emit('send_to_others', message);
-      socket.emit('send_to_myself', message);
     }
   },
   mounted: {
@@ -81,6 +87,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$room-width: 600px;
 $btn-width: 70px;
 $btn-height: 40px;
 $radius: 3px;
@@ -92,7 +99,7 @@ $gap: 10px;
 
 .container, .chat-form {
   width: calc(100% - 50px);
-  max-width: 800px;
+  max-width: $room-width;
 }
 
 .container {
