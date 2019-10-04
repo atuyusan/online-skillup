@@ -47,6 +47,9 @@ io.on('connection', (socket) => {
     console.log('join:', data);
     room = data.room;
     socket.join(room);
+    io.to(room).emit('system_message', {
+      text: data.name + 'さんが参加しました'
+    });
   });
 
   // 切断時

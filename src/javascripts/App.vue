@@ -12,9 +12,6 @@
       </template>
     </div>
     <form @submit="onSubmit" class="chat-form">
-      <!-- <div>
-        <input v-model="$data.name" type="text" class="chat-form-name" placeholder="名前">
-      </div> -->
       <div>
         <textarea v-model="$data.text" type="text" class="chat-form-text" placeholder="メッセージ"></textarea>
       </div>
@@ -63,6 +60,16 @@ export default {
     socket.emit('join', {
       room: 'room1',
       name: name
+    });
+
+    socket.on('system_message', (data) => {
+      const message = {
+        type: 'system',
+        name: '',
+        text: data.text,
+        time: ''
+      };
+      this.$data.messages.push(message);
     });
   },
   methods: {

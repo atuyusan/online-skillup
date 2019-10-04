@@ -1,5 +1,8 @@
 <template>
-  <div :class="{'balloon balloon-me': $props.message.type === 'me', 'balloon balloon-others': $props.message.type === 'others'}">
+  <div v-if="$props.message.type === 'system'" class="system-message">
+    <p>{{ $props.message.text }}</p>
+  </div>
+  <div v-else :class="{'balloon balloon-me': $props.message.type === 'me', 'balloon balloon-others': $props.message.type === 'others'}">
     <div class="meta-info">
       <span class="name">{{ $props.message.name }}</span>
       <span class="time">{{ $props.message.time }}</span>
@@ -66,5 +69,10 @@ $green: #98fb98;
   > .text {
     background-color: $light-gray;
   }
+}
+
+.system-message {
+  text-align: center;
+  margin: 30px 0;
 }
 </style>
