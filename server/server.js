@@ -41,12 +41,14 @@ io.on('connection', (socket) => {
   console.log('connected:', socket.id);
 
   let room = '';
+  const idStore = {};  // IDとユーザ名を管理
 
   // ルームに参加
   socket.on('join', (data) => {
     console.log('join:', data);
     room = data.room;
     socket.join(room);
+    idStore[socket.id] = { name: data.name };
     io.to(room).emit('system_message', {
       text: data.name + 'さんが参加しました'
     });
@@ -54,7 +56,13 @@ io.on('connection', (socket) => {
 
   // 切断時
   socket.on('disconnect', () => {
-    console.log('disconnected:', socket.id);
+    const id = socket.id;
+    console.log('disconnected:', id);
+    if (idStore[id]) {
+      io.to(room).emit('system_message', {
+        text: idStore[id].name + 'さんが退出しました'
+      });
+    }
   });
 
   // 自分以外のユーザにメッセージを送信
