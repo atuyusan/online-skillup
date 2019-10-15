@@ -40,14 +40,40 @@ const io = require('socket.io')(server, { origins: '*:*' });
 io.on('connection', (socket) => {
   console.log('connected:', socket.id);
 
-  // 切断時
-  socket.on('disconnect', () => {
-    console.log('disconnected:', socket.id);
+  let room = '';
+  const idStore = {};  // IDとユーザ名を管理
+
+  // ルームに参加
+  socket.on('join', (data) => {
+    console.log('join:', data);
+    room = data.room;
+    socket.join(room);
+    idStore[socket.id] = { name: data.name };
+    io.to(room).emit('system_message', {
+      text: data.name + 'さんが参加しました'
+    });
   });
 
-  // ユーザの参加
-  socket.on('send', (message) => {
+  // 切断時
+  socket.on('disconnect', () => {
+    const id = socket.id;
+    console.log('disconnected:', id);
+    if (idStore[id]) {
+      io.to(room).emit('system_message', {
+        text: idStore[id].name + 'さんが退出しました'
+      });
+    }
+  });
+
+  // 自分以外のユーザにメッセージを送信
+  socket.on('send_to_others', (message) => {
     console.log('send:', message);
-    io.emit('send', message);
+    socket.broadcast.to(room).emit('send_to_others', message);
+  });
+
+  // 自分自身にメッセージを送信
+  socket.on('send_to_myself', (message) => {
+    console.log('send:', message);
+    io.to(socket.id).emit('send_to_myself', message);
   });
 });
