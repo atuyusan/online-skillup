@@ -27,7 +27,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$padding-val: 10px;
+$text-padding: 10px;
+$ballon-margin: 10px;
 $light-gray: #dcdcdc;
 $gray: #808080;
 $blue: #0000cd;
@@ -50,8 +51,8 @@ $blue: #0000cd;
   > .text {
     display: inline-block;
     background-color: $light-gray;
-    padding: $padding-val;
-    border-radius: $padding-val;
+    padding: $text-padding;
+    border-radius: $text-padding;
     white-space: pre-wrap;  // テキストの改行を
     word-wrap: break-word;  // 反映する
   }
@@ -59,6 +60,7 @@ $blue: #0000cd;
 
 .balloon-me {
   text-align: right;
+  margin-right: $ballon-margin;
 
   > .text {
     color: white;
@@ -67,6 +69,8 @@ $blue: #0000cd;
 }
 
 .balloon-others {
+  margin-left: $ballon-margin;
+
   > .text {
     background-color: $light-gray;
   }

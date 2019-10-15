@@ -3,7 +3,7 @@
     <p>
       <img class="logo" src="../images/logo.jpg" alt="ロゴ">
     </p>
-    <div class="main">
+    <div id="main">
       <template v-for="(message, index) in $data.messages">
         <ChatMessage
           :key="index"
@@ -97,10 +97,16 @@ export default {
       // 入力欄をリセット
       this.$data.name = '';
       this.$data.text = '';
+      // スクロール
+      this.scrollToBottom();
+    },
+    /**
+    * 自動で下までスクロール
+    */
+    scrollToBottom() {
+      const chatLog = document.getElementById('main');
+      chatLog.scrollTop = chatLog.scrollHeight;
     }
-  },
-  mounted: {
-
   }
 };
 </script>
@@ -112,6 +118,7 @@ $btn-height: 40px;
 $radius: 3px;
 $gap: 10px;
 $blue: #0000cd;
+$light-gray: #f5f5f5;
 
 .logo {
   width: 40px;
@@ -126,9 +133,11 @@ $blue: #0000cd;
   margin: 0 auto;
 }
 
-.main {
-  // 吹き出しと入力フォームが重ならないようにする
-  padding-bottom: 150px;
+#main {
+  padding-bottom: 100px;
+  overflow: scroll;
+  background-color: $light-gray;
+  height: 550px;
 }
 
 .chat-form {
