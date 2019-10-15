@@ -30,7 +30,7 @@ export default {
 $padding-val: 10px;
 $light-gray: #dcdcdc;
 $gray: #808080;
-$green: #98fb98;
+$blue: #0000cd;
 
 .balloon {
   > .meta-info {
@@ -61,7 +61,8 @@ $green: #98fb98;
   text-align: right;
 
   > .text {
-    background-color: $green;
+    color: white;
+    background-color: $blue;
   }
 }
 

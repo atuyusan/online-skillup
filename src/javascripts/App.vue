@@ -111,6 +111,7 @@ $btn-width: 70px;
 $btn-height: 40px;
 $radius: 3px;
 $gap: 10px;
+$blue: #0000cd;
 
 .logo {
   width: 40px;
@@ -160,6 +161,8 @@ $gap: 10px;
     float: right;
     border-radius: $radius;
     outline: none;
+    color: white;
+    background-color: $blue;
   }
 }
 </style>
